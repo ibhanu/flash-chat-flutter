@@ -4,6 +4,7 @@ import 'package:flash_chat/components/round_button.dart';
 import '../constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:status_alert/status_alert.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
@@ -81,7 +82,47 @@ class _LoginScreenState extends State<LoginScreen> {
                         showSpinner = false;
                       });
                     } catch (e) {
-                      print(e);
+                      setState(() {
+                        showSpinner = false;
+                      });
+                      switch (e.code) {
+                        case "ERROR_INVALID_EMAIL":
+                          StatusAlert.show(
+                            context,
+                            duration: Duration(seconds: 2),
+                            title: 'Login Error',
+                            subtitle: 'Invalid Email',
+                            configuration: IconConfiguration(icon: Icons.close),
+                          );
+                          break;
+
+                        case "ERROR_WRONG_PASSWORD":
+                          StatusAlert.show(
+                            context,
+                            duration: Duration(seconds: 2),
+                            title: 'Login Error',
+                            subtitle: 'Invalid Password',
+                            configuration: IconConfiguration(icon: Icons.close),
+                          );
+                          break;
+                        case "ERROR_USER_NOT_FOUND":
+                          StatusAlert.show(
+                            context,
+                            duration: Duration(seconds: 2),
+                            title: 'Login Error',
+                            subtitle: 'User Not 404',
+                            configuration: IconConfiguration(icon: Icons.close),
+                          );
+                          break;
+                        default:
+                          StatusAlert.show(
+                            context,
+                            duration: Duration(seconds: 2),
+                            title: 'Login Error',
+                            subtitle: '$e',
+                            configuration: IconConfiguration(icon: Icons.close),
+                          );
+                      }
                     }
                   },
                 ),
